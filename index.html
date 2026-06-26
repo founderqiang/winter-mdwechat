@@ -18,7 +18,7 @@
   <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="alternate icon" href="favicon.svg">
-  <link rel="mask-icon" href="favicon.svg" color="#0066FF">
+  <link rel="mask-icon" href="favicon.svg" color="#000000">
 
   <!-- Markdown 渲染库 -->
   <script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js"></script>
@@ -37,27 +37,60 @@
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <style>
+    /* ============================================================
+       Dell 1996 inspired design system
+       - Black page frame around viewport
+       - Flat color blocks, no soft shadows
+       - Arial Black / Helvetica / Times New Roman
+       - 0px border radius everywhere
+       - 1px solid black hairline borders
+       ============================================================ */
+
     :root {
-      --color-primary: #000;
-      --color-secondary: #666;
-      --color-tertiary: #999;
-      --color-accent: #0066FF;
-      --color-bg: #FAFAFA;
-      --color-surface: #FFF;
-      --color-border: #E0E0E0;
-      --color-light-border: #F0F0F0;
-      /* 侧边栏背景色 */
-      --bg-primary: #FFFFFF;
-      --bg-secondary: #F5F5F7;
-      --border-color: #E0E0E0;
-      --space-unit: 8px;
-      --space-xs: calc(var(--space-unit) * 1);
-      --space-sm: calc(var(--space-unit) * 2);
-      --space-md: calc(var(--space-unit) * 3);
-      --space-lg: calc(var(--space-unit) * 4);
-      --space-xl: calc(var(--space-unit) * 6);
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-      --font-mono: "SF Mono", Monaco, "Cascadia Code", "Consolas", monospace;
+      /* Brand & Accent */
+      --dell-red: #e91d2a;
+      --dell-yellow: #fcc20f;
+      --dell-purple: #6a26a4;
+      --dell-link: #0000ee;
+
+      /* Surface */
+      --dell-frame: #000000;
+      --dell-canvas: #ffffff;
+      --dell-ink: #000000;
+
+      /* Ribbon tints (for cycling through sidebar items) */
+      --tint-olive: #8e8a25;
+      --tint-sage: #b3bd95;
+      --tint-salmon: #d77a7a;
+      --tint-peach: #e6915d;
+      --tint-lime: #c0d4a7;
+      --tint-sky: #9ab6c8;
+      --tint-steel: #a5b8c0;
+      --tint-periwinkle: #8c9ae0;
+
+      /* Legacy variable compatibility */
+      --color-primary: #000000;
+      --color-secondary: #444444;
+      --color-tertiary: #666666;
+      --color-accent: #000000;
+      --color-bg: #ffffff;
+      --color-surface: #ffffff;
+      --color-border: #000000;
+      --color-light-border: #000000;
+
+      /* Spacing (Dell base = 4px) */
+      --space-unit: 4px;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 12px;
+      --space-lg: 16px;
+      --space-xl: 20px;
+
+      /* Typography */
+      --font-display: "Arial Black", Helvetica, system-ui, sans-serif;
+      --font-ui: Helvetica, Arial, system-ui, sans-serif;
+      --font-body: "Times New Roman", Times, Georgia, serif;
+      --font-mono: "SF Mono", Monaco, "Cascadia Code", Consolas, monospace;
     }
 
     * {
@@ -66,977 +99,954 @@
       box-sizing: border-box;
     }
 
-    body {
-      font-family: var(--font-sans);
-      font-size: 15px;
-      line-height: 1.6;
-      color: var(--color-primary);
-      background-color: var(--color-bg);
-      -webkit-font-smoothing: antialiased;
+    html, body {
+      height: 100%;
+      background: var(--dell-frame); /* black outside the frame */
     }
 
+    body {
+      font-family: var(--font-body);
+      font-size: 14px;
+      line-height: 1.4;
+      color: var(--dell-ink);
+      -webkit-font-smoothing: auto; /* period-accurate: no antialiasing tweak */
+    }
+
+    /* ============================================================
+       Page Frame — the signature 8px black border around viewport
+       ============================================================ */
     #app {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto 1fr;
-      height: 100vh;
-      background: var(--color-surface);
+      grid-template-columns: 180px 1fr 1fr;
+      grid-template-rows: auto 1fr;
+      height: calc(100vh - 16px); /* minus frame top+bottom */
+      margin: 8px; /* the page frame */
+      background: var(--dell-canvas);
+      border: 1px solid var(--dell-frame);
     }
 
-    /* 顶部栏 */
+    /* ============================================================
+       Top Banner (header)
+       ============================================================ */
     .header {
       grid-column: 1 / -1;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: var(--space-sm) var(--space-lg);
-      border-bottom: 1px solid var(--color-border);
-      background: var(--color-surface);
+      padding: 12px 16px;
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+      border-bottom: 1px solid var(--dell-frame);
     }
 
     .logo {
+      font-family: var(--font-ui);
       font-size: 16px;
-      font-weight: 600;
-      color: var(--color-primary);
-      letter-spacing: -0.02em;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .creator-info {
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--color-tertiary);
-      margin-left: 12px;
-    }
-
-    .creator-info a {
-      color: var(--color-accent);
-      text-decoration: none;
-      transition: opacity 120ms;
-    }
-
-    .creator-info a:hover {
-      opacity: 0.7;
-    }
-
-    .github-link {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      color: var(--color-secondary);
-      transition: all 120ms;
-      text-decoration: none;
-    }
-
-    .github-link:hover {
-      background: var(--color-bg);
-      color: var(--color-primary);
-      transform: scale(1.05);
-    }
-
-    .github-link svg {
-      width: 20px;
-      height: 20px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-    }
-
-    .header-links {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-    }
-
-    .header-link {
-      font-size: 13px;
-      color: var(--color-secondary);
-      text-decoration: none;
-      padding: 4px 8px;
-      border-radius: 6px;
-      border: 1px solid transparent;
-      transition: all 120ms;
-    }
-
-    .header-link:hover {
-      color: var(--color-primary);
-      background: var(--color-bg);
-      border-color: var(--color-border);
-    }
-
-    .header-link.primary {
-      color: #fff;
-      background: var(--color-accent);
-      border-color: var(--color-accent);
-      font-weight: 600;
-    }
-
-    .header-link.primary:hover {
-      background: #0052cc;
-      border-color: #0052cc;
-      color: #fff;
-    }
-
-    /* 样式选择区 - 横向滚动 */
-    .styles-section {
-      grid-column: 1 / -1;
-      padding: var(--space-sm) 0;
-      border-bottom: 1px solid var(--color-border);
-      background: var(--color-surface);
-      overflow: hidden;
-    }
-
-    .styles-container {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      padding: 0 var(--space-lg);
-    }
-
-    .styles-label {
-      font-size: 12px;
-      color: var(--color-tertiary);
-      font-weight: 500;
-      flex-shrink: 0;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .styles-scroll-wrapper {
-      flex: 1;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-behavior: smooth;
-      padding: 2px 0;
-    }
-
-    .styles-scroll-wrapper::-webkit-scrollbar {
-      height: 6px;
-    }
-
-    .styles-scroll-wrapper::-webkit-scrollbar-thumb {
-      background: var(--color-border);
-      border-radius: 3px;
-    }
-
-    .styles-list {
-      display: flex;
-      gap: 8px;
-      padding: 0 2px;
-    }
-
-    .style-card {
-      padding: 6px 12px;
-      border: 1px solid var(--color-light-border);
-      border-radius: 6px;
-      background: var(--color-surface);
-      cursor: pointer;
-      transition: all 120ms;
-      font-size: 12px;
-      color: var(--color-primary);
-      white-space: nowrap;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      position: relative;
-    }
-
-    .style-card:hover {
-      border-color: var(--color-accent);
-      background: var(--color-bg);
-    }
-
-    .style-card.active {
-      border-color: var(--color-accent);
-      background: var(--color-accent);
-      color: var(--color-surface);
-      font-weight: 500;
-    }
-
-    .style-card.recommended::before {
-      content: '✨';
-      font-size: 10px;
-      margin-right: 2px;
-    }
-
-    .style-card.starred::after {
-      content: '⭐';
-      font-size: 10px;
-      margin-left: 2px;
-    }
-
-    /* 主内容区 */
-    .main-content {
-      display: contents;
-    }
-
-    /* 编辑器面板 */
-    .editor-panel {
-      display: flex;
-      flex-direction: column;
-      border-right: 1px solid var(--color-border);
-      overflow: hidden;
-    }
-
-    .markdown-input-container {
-      flex: 1;
-      overflow: hidden;
-      padding: var(--space-md);
-      background: var(--color-surface);
-    }
-
-    .markdown-input {
-      width: 100%;
-      height: 100%;
-      padding: var(--space-lg);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      font-family: var(--font-mono);
-      font-size: 14px;
-      line-height: 1.6;
-      resize: none;
-      background: var(--color-surface);
-      color: var(--color-primary);
-      transition: all 120ms;
-    }
-
-    .markdown-input:focus {
-      outline: 2px solid var(--color-accent);
-      outline-offset: -2px;
-    }
-
-    .markdown-input.drag-over {
-      background: var(--color-bg);
-      border-color: var(--color-accent);
-      box-shadow: 0 0 0 4px rgba(0, 102, 255, 0.1);
-    }
-
-    /* 编辑器底部工具栏 */
-    .editor-footer {
-      padding: var(--space-sm) var(--space-lg);
-      border-top: 1px solid var(--color-border);
-      background: var(--color-bg);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .upload-section {
-      display: flex;
-      align-items: center;
-      gap: var(--space-md);
-    }
-
-    .upload-label {
-      display: flex;
-      align-items: center;
-      gap: var(--space-sm);
-      cursor: pointer;
-      padding: var(--space-sm) var(--space-md);
-      border: 1px solid var(--color-border);
-      border-radius: 6px;
-      background: var(--color-surface);
-      color: var(--color-secondary);
-      font-size: 13px;
-      transition: all 120ms;
-    }
-
-    .upload-label:hover {
-      background: var(--color-surface);
-      border-color: var(--color-accent);
-      color: var(--color-accent);
-    }
-
-    .upload-hints {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .upload-hint {
-      font-size: 12px;
-      color: var(--color-tertiary);
-    }
-
-    .feishu-hint {
-      font-size: 11px;
-      color: var(--color-accent);
-      line-height: 1.4;
-      opacity: 0.8;
-    }
-
-    .char-count {
-      font-size: 12px;
-      color: var(--color-tertiary);
-      font-family: var(--font-mono);
-    }
-
-    /* 预览面板 */
-    .preview-panel {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .preview-header {
-      padding: var(--space-sm) var(--space-lg);
-      border-bottom: 1px solid var(--color-border);
-      background: var(--color-bg);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .preview-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--color-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .mode-switcher {
-      display: flex;
-      gap: 4px;
-      background: var(--color-bg);
-      border-radius: 6px;
-      padding: 2px;
-    }
-
-    .mode-toggle-btn {
-      padding: 6px 12px;
-      background: transparent;
-      border: none;
-      border-radius: 4px;
-      color: var(--color-secondary);
-      font-size: 12px;
-      cursor: pointer;
-      transition: all 120ms;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      text-transform: none;
-      font-weight: normal;
-    }
-
-    .mode-toggle-btn:hover {
-      color: var(--color-primary);
-    }
-
-    .mode-toggle-btn.active {
-      background: var(--color-surface);
-      color: var(--color-primary);
-      font-weight: 500;
-    }
-
-    .mode-toggle-btn svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    .preview-actions {
-      display: flex;
-      gap: var(--space-sm);
-      align-items: center;
-    }
-
-    .star-btn {
-      width: 28px;
-      height: 28px;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface);
-      color: var(--color-secondary);
-      cursor: pointer;
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 120ms;
-    }
-
-    .star-btn:hover {
-      background: var(--color-bg);
-      color: var(--color-accent);
-    }
-
-    .star-btn.active {
-      background: var(--color-accent);
-      color: var(--color-surface);
-      border-color: var(--color-accent);
-    }
-
-    .star-btn svg {
-      width: 14px;
-      height: 14px;
-      stroke-width: 2;
-    }
-
-    .gif-switch {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-      user-select: none;
-      font-size: 12px;
-      color: var(--color-secondary);
-      white-space: nowrap;
-    }
-
-    .gif-switch__input {
-      position: absolute;
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .gif-switch__track {
-      position: relative;
-      width: 34px;
-      height: 18px;
-      border-radius: 9px;
-      background: var(--color-border);
-      transition: background 160ms;
-      flex: none;
-    }
-
-    .gif-switch__track.on {
-      background: var(--color-accent);
-    }
-
-    .gif-switch__thumb {
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-      transition: transform 160ms;
-    }
-
-    .gif-switch__track.on .gif-switch__thumb {
-      transform: translateX(16px);
-    }
-
-    .copy-btn {
-      padding: 6px 16px;
-      background: var(--color-primary);
-      color: var(--color-surface);
-      border: none;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 120ms;
+      font-weight: 700;
+      color: var(--dell-canvas);
       letter-spacing: 0.02em;
-    }
-
-    .copy-btn:hover {
-      opacity: 0.8;
-    }
-
-    .copy-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
-    .copy-btn.success {
-      background: #00C853;
-    }
-
-    .copy-btn-x {
-      background: #1d9bf0;
-    }
-
-    .copy-btn-x:hover {
-      background: #1a8cd8;
-      opacity: 1;
-    }
-
-    .copy-btn-x.success {
-      background: #00C853;
-    }
-
-    .preview-content {
-      flex: 1;
-      overflow-y: auto;
-      background: var(--color-surface);
-      position: relative;
-      /* 两侧自适应留白：窄屏也不让内容顶到边，宽屏维持原有间距 */
-      padding: 0 clamp(24px, 6%, 80px);
-    }
-
-    .preview-container {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 20px 32px 48px 32px;
-      line-height: 1.8;
-      position: relative;
-    }
-
-    .preview-container.layout-mode img {
-      cursor: pointer;
-      transition: all 120ms;
-    }
-
-    /* 左右联动：跳转时高亮对应块 */
-    .preview-container .source-flash {
-      animation: sourceFlash 800ms ease-out;
-      border-radius: 4px;
-    }
-
-    @keyframes sourceFlash {
-      0% { box-shadow: 0 0 0 3px rgba(255, 189, 46, 0.55); }
-      100% { box-shadow: 0 0 0 3px rgba(255, 189, 46, 0); }
-    }
-
-    .preview-container.layout-mode img:hover {
-      outline: 2px solid var(--color-accent);
-      outline-offset: 2px;
-    }
-
-    /* 图片控制面板 */
-    .image-control-panel {
-      background: white;
-      border: 2px solid var(--color-accent);
-      border-radius: 8px;
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-      padding: 16px;
-      animation: fadeIn 200ms ease-out;
-      min-width: 300px;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .control-panel-inner {
-      display: flex;
-      gap: 16px;
-      align-items: center;
-    }
-
-    .control-group {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .control-group label {
-      font-size: 12px;
-      color: var(--color-secondary);
-      font-weight: 500;
-    }
-
-    .width-slider {
-      width: 120px;
-      height: 4px;
-      -webkit-appearance: none;
-      appearance: none;
-      background: var(--color-border);
-      border-radius: 2px;
-      outline: none;
-    }
-
-    .width-slider::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 12px;
-      height: 12px;
-      background: var(--color-accent);
-      border-radius: 50%;
-      cursor: pointer;
-    }
-
-    .width-slider::-moz-range-thumb {
-      width: 12px;
-      height: 12px;
-      background: var(--color-accent);
-      border-radius: 50%;
-      cursor: pointer;
-      border: none;
-    }
-
-    .width-value {
-      font-size: 11px;
-      color: var(--color-tertiary);
-      font-family: var(--font-mono);
-      min-width: 45px;
-    }
-
-    .align-buttons {
-      display: flex;
-      gap: 4px;
-    }
-
-    .align-buttons button {
-      width: 24px;
-      height: 24px;
-      border: 1px solid var(--color-border);
-      background: var(--color-surface);
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-      transition: all 120ms;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .align-buttons button:hover {
-      background: var(--color-bg);
-      border-color: var(--color-accent);
-    }
-
-    .align-buttons button.active {
-      background: var(--color-accent);
-      color: var(--color-surface);
-      border-color: var(--color-accent);
-    }
-
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      color: var(--color-tertiary);
-    }
-
-    .empty-state-icon {
-      width: 64px;
-      height: 64px;
-      margin-bottom: var(--space-lg);
-      opacity: 0.3;
-    }
-
-    .empty-state h3 {
-      font-size: 15px;
-      font-weight: 500;
-      color: var(--color-secondary);
-      margin-bottom: var(--space-xs);
-    }
-
-    .empty-state p {
-      font-size: 13px;
-      color: var(--color-tertiary);
-    }
-
-    /* 小红书预览样式 */
-    .xiaohongshu-preview {
-      padding: var(--space-lg);
-      overflow-y: auto;
-    }
-
-    .xiaohongshu-controls {
-      display: flex;
-      gap: var(--space-sm);
-      margin-bottom: var(--space-lg);
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .xiaohongshu-btn {
-      padding: 8px 16px;
-      background: var(--color-primary);
-      color: var(--color-surface);
-      border: none;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 120ms;
-    }
-
-    .xiaohongshu-btn:hover {
-      opacity: 0.8;
-    }
-
-    .xiaohongshu-btn:disabled {
-      opacity: 0.3;
-      cursor: not-allowed;
-    }
-
-    .xiaohongshu-btn.secondary {
-      background: var(--color-surface);
-      color: var(--color-primary);
-      border: 1px solid var(--color-border);
-    }
-
-    .xiaohongshu-images-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: var(--space-md);
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-
-    .xiaohongshu-image-card {
-      background: var(--color-surface);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      transition: all 120ms;
-      cursor: pointer;
-    }
-
-    .xiaohongshu-image-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .xiaohongshu-image-card img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .xiaohongshu-image-label {
-      padding: var(--space-sm);
-      text-align: center;
-      font-size: 12px;
-      color: var(--color-secondary);
-      background: var(--color-bg);
-    }
-
-    .xiaohongshu-loading {
-      text-align: center;
-      padding: var(--space-xl);
-      color: var(--color-secondary);
-    }
-
-    .xiaohongshu-empty {
-      text-align: center;
-      padding: var(--space-xl);
-      color: var(--color-tertiary);
-    }
-
-    /* Toast 提示 */
-    .toast {
-      position: fixed;
-      bottom: var(--space-lg);
-      right: var(--space-lg);
-      padding: var(--space-md) var(--space-lg);
-      background: var(--color-primary);
-      color: var(--color-surface);
-      border-radius: 6px;
-      font-size: 13px;
-      z-index: 1000;
-      animation: slideUp 200ms ease-out;
-    }
-
-    @keyframes slideUp {
-      from {
-        transform: translateY(100px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-
-    .toast.success {
-      background: #00C853;
-    }
-
-    .toast.error {
-      background: #D32F2F;
-    }
-
-    /* 右下角浮动广告 */
-    .floating-ad {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 990;
-      font-family: var(--font-sans);
-    }
-
-    .floating-ad__collapsed {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 16px;
-      box-shadow:
-        0 4px 24px rgba(0, 0, 0, 0.12),
-        0 1px 2px rgba(0, 0, 0, 0.05);
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      animation: floatingAdSlideIn 0.5s ease-out;
-    }
-
-    @keyframes floatingAdSlideIn {
-      from {
-        opacity: 0;
-        transform: translateY(20px) scale(0.95);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-    }
-
-    .floating-ad__collapsed:hover {
-      transform: translateY(-2px);
-      box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.15),
-        0 2px 4px rgba(0, 0, 0, 0.08);
-    }
-
-    .floating-ad__collapsed-content {
+      text-transform: uppercase;
       display: flex;
       align-items: center;
       gap: 10px;
     }
 
-    .floating-ad__collapsed-icon {
-      font-size: 24px;
+    /* Decorative "NEW!" sticker next to logo */
+    .logo::after {
+      content: "NEW!";
+      background: var(--dell-yellow);
+      color: var(--dell-ink);
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border: 1px solid var(--dell-frame);
+      transform: rotate(-4deg);
+      display: inline-block;
+      letter-spacing: 0.05em;
     }
 
-    .floating-ad__collapsed-text {
+    .header-actions {
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .floating-ad__collapsed-title {
+    .header-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .header-link {
+      font-family: var(--font-body);
       font-size: 14px;
-      font-weight: 600;
-      color: #1a1a1a;
+      color: var(--dell-canvas);
+      text-decoration: underline;
+      padding: 4px 8px;
+      border: 1px solid transparent;
     }
 
-    .floating-ad__collapsed-tag {
-      padding: 2px 8px;
-      font-size: 11px;
-      font-weight: 600;
-      border-radius: 100px;
+    .header-link:hover {
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
     }
 
-    .floating-ad__close {
+    .header-link.primary {
+      background: var(--dell-red);
+      color: var(--dell-canvas);
+      border-color: var(--dell-canvas);
+      text-decoration: none;
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       Sidebar — ribbon card stack
+       ============================================================ */
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
+      overflow: hidden;
+      min-height: 0;
+    }
+
+    .sidebar-section {
+      padding: 12px 12px;
+      border-bottom: 1px solid var(--dell-frame);
+      flex-shrink: 0;
+    }
+
+    .sidebar-section:first-child {
+      padding: 0 12px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* Upload button — button-secondary */
+    .upload-btn {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
-      background: rgba(0, 0, 0, 0.05);
-      border: none;
-      border-radius: 50%;
-      font-size: 16px;
-      color: #666;
+      gap: 6px;
+      width: 100%;
+      padding: 6px 12px;
+      border: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
       cursor: pointer;
-      transition: all 0.2s ease;
-      margin-left: 4px;
+      border-radius: 0;
     }
 
-    .floating-ad__close:hover {
-      background: rgba(0, 0, 0, 0.1);
-      color: #333;
+    .upload-btn:hover {
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
     }
 
-    .floating-ad__panel {
-      width: 320px;
-      background: rgba(255, 255, 255, 0.98);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(0, 0, 0, 0.08);
-      border-radius: 20px;
-      box-shadow:
-        0 12px 48px rgba(0, 0, 0, 0.15),
-        0 4px 12px rgba(0, 0, 0, 0.08);
+    .sidebar-styles {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px 12px;
+      border-bottom: none;
+    }
+
+    .sidebar-styles::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .sidebar-styles::-webkit-scrollbar-track {
+      background: var(--dell-canvas);
+      border-left: 1px solid var(--dell-frame);
+    }
+
+    .sidebar-styles::-webkit-scrollbar-thumb {
+      background: var(--dell-frame);
+    }
+
+    /* "样式" section label — ui-label style */
+    .sidebar-label {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--dell-ink);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid var(--dell-frame);
+    }
+
+    .sidebar-group-title {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--dell-ink);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin: 6px 0 4px 0;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--dell-frame);
+      margin: 6px 0;
+    }
+
+    /* Style item — ribbon-card inspired: white tile, black hairline border */
+    .style-item {
+      display: flex;
+      align-items: center;
+      padding: 6px 8px;
+      border: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
+      cursor: pointer;
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.3;
+      color: var(--dell-ink);
+      margin-bottom: 4px;
+      border-radius: 0;
+      transition: background 80ms, color 80ms;
+    }
+
+    .style-item:hover {
+      background: var(--dell-yellow);
+    }
+
+    .style-item.active {
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+      font-weight: 700;
+    }
+
+    .style-item.recommended::before {
+      content: "★";
+      color: var(--dell-red);
+      font-size: 12px;
+      margin-right: 6px;
+      flex-shrink: 0;
+    }
+
+    .style-item.active.recommended::before {
+      color: var(--dell-yellow);
+    }
+
+    .style-item.starred::after {
+      content: "●";
+      color: var(--dell-yellow);
+      font-size: 10px;
+      margin-left: auto;
+      padding-left: 6px;
+      flex-shrink: 0;
+      text-shadow: 0 0 0 var(--dell-frame);
+    }
+
+    .style-item.active.starred::after {
+      color: var(--dell-yellow);
+    }
+
+    .style-item-name {
+      flex: 1;
       overflow: hidden;
-      animation: floatingAdExpandIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      text-overflow: ellipsis;
     }
 
-    @keyframes floatingAdExpandIn {
-      from {
-        opacity: 0;
-        transform: scale(0.95) translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-      }
+    /* ============================================================
+       Main content
+       ============================================================ */
+    .main-content {
+      display: contents;
     }
 
-    .floating-ad__panel-header {
+    /* ============================================================
+       Editor panel — text-input aesthetic
+       ============================================================ */
+    .editor-panel {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--dell-frame);
+      overflow: hidden;
+      background: var(--dell-canvas);
+    }
+
+    .markdown-input-container {
+      flex: 1;
+      overflow: hidden;
+      padding: 12px;
+      background: var(--dell-canvas);
+    }
+
+    .markdown-input {
+      width: 100%;
+      height: 100%;
+      padding: 12px;
+      border: 1px solid var(--dell-frame);
+      border-radius: 0;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      line-height: 1.5;
+      resize: none;
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
+      outline: none;
+    }
+
+    .markdown-input:focus {
+      outline: 2px solid var(--dell-frame);
+      outline-offset: -2px;
+    }
+
+    .markdown-input.drag-over {
+      background: var(--dell-yellow);
+      border-color: var(--dell-frame);
+    }
+
+    .markdown-input::placeholder {
+      color: var(--dell-ink);
+      opacity: 0.5;
+      font-family: var(--font-body);
+      font-style: italic;
+    }
+
+    /* Editor header — char count (aligned with sidebar upload row & preview header) */
+    .editor-header {
+      padding: 0 12px;
+      height: 56px;
+      border-bottom: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+
+    .char-count {
+      font-family: var(--font-body);
+      font-size: 11px;
+      color: var(--dell-ink);
+    }
+
+    /* ============================================================
+       Preview panel — ribbon-card body aesthetic
+       ============================================================ */
+    .preview-panel {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--dell-canvas);
+    }
+
+    .preview-header {
+      padding: 0 16px;
+      height: 56px;
+      border-bottom: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+      gap: 8px;
+      flex-shrink: 0;
     }
 
-    .floating-ad__panel-title {
-      font-size: 15px;
+    .preview-title {
+      font-family: var(--font-ui);
+      font-size: 14px;
       font-weight: 700;
-      color: #1a1a1a;
+      color: var(--dell-ink);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
     }
 
-    .floating-ad__collapse {
+    .preview-actions {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .preview-container {
+      padding: 24px 28px;
+      background: var(--dell-canvas);
+    }
+
+    .preview-content {
+      flex: 1;
+      overflow-y: auto;
+      max-width: 740px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ============================================================
+       Buttons — primary (black) / secondary (white) / CTA (red)
+       ============================================================ */
+
+    /* Copy button — cta-block-red (the main CTA) */
+    .copy-btn {
+      background: var(--dell-red);
+      color: var(--dell-canvas);
+      border: 1px solid var(--dell-frame);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 6px 14px;
+      cursor: pointer;
+      border-radius: 0;
+      transition: background 80ms;
+    }
+
+    .copy-btn:hover {
+      background: #b8141f;
+    }
+
+    .copy-btn:active {
+      background: var(--dell-frame);
+    }
+
+    /* Star button */
+    .star-btn {
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
+      border: 1px solid var(--dell-frame);
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
-      background: rgba(0, 0, 0, 0.05);
-      border: none;
-      border-radius: 8px;
-      color: #666;
       cursor: pointer;
-      transition: all 0.2s ease;
+      border-radius: 0;
+      padding: 0;
     }
 
-    .floating-ad__collapse:hover {
-      background: rgba(0, 0, 0, 0.1);
+    .star-btn:hover {
+      background: var(--dell-yellow);
     }
 
-    .floating-ad__list {
+    .star-btn.active {
+      background: var(--dell-yellow);
+    }
+
+    .star-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* History & save buttons — button-secondary */
+    .history-btn,
+    .save-btn {
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
+      border: 1px solid var(--dell-frame);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 6px 10px;
+      cursor: pointer;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .history-btn:hover,
+    .save-btn:hover {
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+    }
+
+    .history-btn svg,
+    .save-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    .history-count {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+      padding: 1px 5px;
+      border-radius: 0;
+      margin-left: 2px;
+    }
+
+    /* ============================================================
+       Mode switcher (wechat / xiaohongshu toggle)
+       ============================================================ */
+    .mode-switcher {
+      display: flex;
+      border: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
+    }
+
+    .mode-toggle-btn {
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
+      border: none;
+      border-right: 1px solid var(--dell-frame);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 0;
+    }
+
+    .mode-toggle-btn:last-child {
+      border-right: none;
+    }
+
+    .mode-toggle-btn.active {
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+    }
+
+    /* Xiaohongshu export button */
+    .xiaohongshu-btn {
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
+      border: 1px solid var(--dell-frame);
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 0;
+    }
+
+    .xiaohongshu-btn:hover {
+      background: var(--dell-yellow);
+    }
+
+    /* ============================================================
+       GIF switch — toggle track/thumb
+       ============================================================ */
+    .gif-switch {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--dell-ink);
+      cursor: pointer;
+    }
+
+    .gif-switch__track {
+      width: 28px;
+      height: 14px;
+      background: var(--dell-canvas);
+      border: 1px solid var(--dell-frame);
+      border-radius: 0;
+      position: relative;
+      transition: background 80ms;
+    }
+
+    .gif-switch__thumb {
+      position: absolute;
+      top: 1px;
+      left: 1px;
+      width: 10px;
+      height: 10px;
+      background: var(--dell-frame);
+      transition: left 80ms;
+    }
+
+    .gif-switch__input {
+      display: none;
+    }
+
+    .gif-switch__input:checked + .gif-switch__track {
+      background: var(--dell-red);
+    }
+
+    .gif-switch__input:checked + .gif-switch__track .gif-switch__thumb {
+      left: 15px;
+      background: var(--dell-canvas);
+    }
+
+    /* ============================================================
+       History sidebar
+       ============================================================ */
+    .history-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 100;
+      display: none;
+    }
+
+    .history-overlay.visible {
+      display: block;
+    }
+
+    .history-sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 360px;
+      height: 100vh;
+      background: var(--dell-canvas);
+      border-left: 2px solid var(--dell-frame);
+      z-index: 101;
+      display: flex;
+      flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 200ms;
+    }
+
+    .history-sidebar.open {
+      transform: translateX(0);
+    }
+
+    .history-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--dell-frame);
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .history-header-left {
+      font-family: var(--font-ui);
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .history-header-left .history-count {
+      background: var(--dell-red);
+      color: var(--dell-canvas);
+    }
+
+    .history-close-btn {
+      background: transparent;
+      color: var(--dell-canvas);
+      border: 1px solid var(--dell-canvas);
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      border-radius: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-ui);
+      font-weight: 700;
+    }
+
+    .history-close-btn:hover {
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
+    }
+
+    .history-actions {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--dell-frame);
+      display: flex;
+      gap: 8px;
+    }
+
+    .history-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0;
+    }
+
+    .history-item {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--dell-frame);
+      cursor: pointer;
+      background: var(--dell-canvas);
+    }
+
+    .history-item:hover {
+      background: var(--dell-yellow);
+    }
+
+    .history-item.active {
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+    }
+
+    .history-title {
+      font-family: var(--font-ui);
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .history-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-body);
+      font-size: 11px;
+      opacity: 0.8;
+    }
+
+    .history-time {
+      font-family: var(--font-body);
+      font-size: 11px;
+    }
+
+    .history-style {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border: 1px solid currentColor;
+    }
+
+    .history-item-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .history-empty {
+      padding: 40px 20px;
+      text-align: center;
+      font-family: var(--font-body);
+      font-style: italic;
+      color: var(--dell-ink);
+      opacity: 0.6;
+    }
+
+    /* ============================================================
+       Empty state (preview placeholder)
+       ============================================================ */
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 20px;
+      text-align: center;
+      color: var(--dell-ink);
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.3;
+    }
+
+    .empty-state h3 {
+      font-family: var(--font-display);
+      font-size: 20px;
+      font-weight: 900;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .empty-state p {
+      font-family: var(--font-body);
+      font-size: 14px;
+      opacity: 0.7;
+      max-width: 300px;
+    }
+
+    /* ============================================================
+       Toast notifications
+       ============================================================ */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+      padding: 10px 20px;
+      border: 1px solid var(--dell-frame);
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      z-index: 1000;
+      border-radius: 0;
+      box-shadow: 4px 4px 0 var(--dell-red);
+    }
+
+    .toast.success {
+      box-shadow: 4px 4px 0 var(--dell-frame);
+    }
+
+    .toast.error {
+      box-shadow: 4px 4px 0 var(--dell-red);
+    }
+
+    /* ============================================================
+       Xiaohongshu mode
+       ============================================================ */
+    .xiaohongshu-preview {
+      padding: 16px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .xiaohongshu-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--dell-frame);
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .xiaohongshu-images-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+    }
+
+    .xiaohongshu-image-card {
+      border: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
       padding: 8px;
     }
 
-    .floating-ad__item {
+    .xiaohongshu-image-card img {
+      width: 100%;
+      display: block;
+      border: 1px solid var(--dell-frame);
+    }
+
+    .xiaohongshu-image-label {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    .xiaohongshu-loading {
+      padding: 40px;
+      text-align: center;
+      font-family: var(--font-body);
+      font-style: italic;
+    }
+
+    .xiaohongshu-empty {
+      padding: 40px;
+      text-align: center;
+      font-family: var(--font-body);
+      font-style: italic;
+      opacity: 0.6;
+    }
+
+    /* ============================================================
+       Floating ad (restyled to fit Dell 1996 aesthetic)
+       ============================================================ */
+    .floating-ad {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 280px;
+      background: var(--dell-canvas);
+      border: 2px solid var(--dell-frame);
+      z-index: 99;
+      font-family: var(--font-body);
+      box-shadow: 4px 4px 0 var(--dell-frame);
+    }
+
+    .floating-ad__header {
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+      padding: 6px 10px;
       display: flex;
       align-items: center;
-      gap: 12px;
-      padding: 14px 12px;
-      border-radius: 12px;
+      justify-content: space-between;
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .floating-ad__title {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .floating-ad__close {
+      background: transparent;
+      border: 1px solid var(--dell-canvas);
+      color: var(--dell-canvas);
+      width: 18px;
+      height: 18px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      border-radius: 0;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      line-height: 1;
+    }
+
+    .floating-ad__close:hover {
+      background: var(--dell-canvas);
+      color: var(--dell-ink);
+    }
+
+    .floating-ad__list {
+      padding: 0;
+    }
+
+    .floating-ad__item {
+      padding: 10px;
+      border-bottom: 1px solid var(--dell-frame);
+      cursor: pointer;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .floating-ad__item:last-child {
+      border-bottom: none;
     }
 
     .floating-ad__item:hover {
-      background: rgba(99, 102, 241, 0.06);
+      background: var(--dell-yellow);
+    }
+
+    .floating-ad__item.active {
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
     }
 
     .floating-ad__icon {
-      font-size: 28px;
+      font-size: 20px;
       flex-shrink: 0;
     }
 
@@ -1045,559 +1055,243 @@
       min-width: 0;
     }
 
-    .floating-ad__header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      margin-bottom: 4px;
-    }
-
-    .floating-ad__title {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1a1a1a;
-    }
-
-    .floating-ad__tag {
-      padding: 2px 8px;
-      font-size: 10px;
-      font-weight: 600;
-      border-radius: 100px;
-      flex-shrink: 0;
+    .floating-ad__item .floating-ad__title {
+      font-family: var(--font-ui);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 2px;
     }
 
     .floating-ad__subtitle {
-      display: block;
+      font-family: var(--font-body);
       font-size: 12px;
-      color: #666;
-      line-height: 1.4;
+      line-height: 1.3;
     }
+
+    .floating-ad__tag {
+      display: inline-block;
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border: 1px solid currentColor;
+      margin-top: 4px;
+    }
+
+    .floating-ad__tag--orange { color: var(--dell-red); }
+    .floating-ad__tag--blue { color: var(--dell-link); }
+    .floating-ad__tag--green { color: #008800; }
 
     .floating-ad__coupon {
-      display: inline-block;
-      margin-top: 4px;
-      padding: 2px 8px;
-      background: rgba(249, 115, 22, 0.1);
-      color: #F97316;
+      font-family: var(--font-mono);
       font-size: 11px;
-      font-weight: 600;
-      border-radius: 4px;
-    }
-
-    .floating-ad__arrow {
-      color: #999;
-      flex-shrink: 0;
-      transition: transform 0.2s ease;
-    }
-
-    .floating-ad__item:hover .floating-ad__arrow {
-      transform: translateX(2px);
-      color: #666;
-    }
-
-    .floating-ad__close-expanded {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      background: none;
-      border: none;
-      border-top: 1px solid rgba(0, 0, 0, 0.06);
-      font-size: 13px;
-      color: #888;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .floating-ad__close-expanded:hover {
-      background: rgba(0, 0, 0, 0.03);
-      color: #555;
-    }
-
-    .floating-ad__tag--orange {
-      background: rgba(249, 115, 22, 0.12);
-      color: #EA580C;
-    }
-
-    .floating-ad__tag--blue {
-      background: rgba(59, 130, 246, 0.12);
-      color: #2563EB;
-    }
-
-    .floating-ad__tag--purple {
-      background: rgba(139, 92, 246, 0.12);
-      color: #7C3AED;
-    }
-
-    .floating-ad__tag--green {
-      background: rgba(16, 185, 129, 0.12);
-      color: #059669;
+      background: var(--dell-yellow);
+      color: var(--dell-ink);
+      padding: 1px 4px;
+      border: 1px solid var(--dell-frame);
+      margin-top: 4px;
+      display: inline-block;
     }
 
     .floating-ad__indicators {
-      position: absolute;
-      bottom: -8px;
-      left: 50%;
-      transform: translateX(-50%);
       display: flex;
       gap: 4px;
+      padding: 6px 10px;
+      border-top: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
     }
 
     .floating-ad__indicator {
-      width: 6px;
-      height: 6px;
-      background: rgba(0, 0, 0, 0.2);
-      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      border: 1px solid var(--dell-frame);
+      background: var(--dell-canvas);
       cursor: pointer;
-      transition: all 0.2s ease;
     }
 
     .floating-ad__indicator.active {
-      background: #6366F1;
-      width: 16px;
-      border-radius: 3px;
+      background: var(--dell-frame);
     }
 
-    /* 滚动条 */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
+    /* Collapsed state */
+    .floating-ad__collapsed {
+      background: var(--dell-yellow);
+      border: 2px solid var(--dell-frame);
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      box-shadow: 4px 4px 0 var(--dell-frame);
     }
 
-    ::-webkit-scrollbar-track {
+    .floating-ad__collapsed-icon {
+      font-size: 18px;
+    }
+
+    .floating-ad__collapsed-title {
+      font-family: var(--font-ui);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      flex: 1;
+    }
+
+    .floating-ad__collapsed-tag {
+      font-family: var(--font-ui);
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--dell-frame);
+      color: var(--dell-canvas);
+      padding: 1px 4px;
+    }
+
+    .floating-ad__collapse {
       background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--dell-ink);
+      padding: 0 2px;
+      font-weight: 700;
     }
 
-    ::-webkit-scrollbar-thumb {
-      background: var(--color-border);
-      border-radius: 4px;
+    .floating-ad__close-expanded {
+      background: transparent;
+      border: 1px solid var(--dell-frame);
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      border-radius: 0;
+      font-weight: 700;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--color-tertiary);
+    .floating-ad__arrow {
+      display: none;
     }
 
-    /* 移动端响应式布局 */
+    .floating-ad__panel {
+      display: none;
+    }
+
+    .floating-ad__panel-header {
+      display: none;
+    }
+
+    .floating-ad__panel-title {
+      display: none;
+    }
+
+    /* ============================================================
+       Responsive
+       ============================================================ */
     @media (max-width: 768px) {
       #app {
         grid-template-columns: 1fr;
         grid-template-rows: auto auto auto 1fr;
-        height: 100vh;
+        height: auto;
+        min-height: 100vh;
+        margin: 4px;
       }
 
       .header {
         flex-wrap: wrap;
-        gap: var(--space-xs);
-        padding: var(--space-xs) var(--space-sm);
+        gap: 6px;
+        padding: 8px 12px;
       }
 
       .logo {
         font-size: 14px;
       }
 
-      .header-actions {
+      /* Sidebar becomes horizontal strip */
+      .sidebar {
+        flex-direction: row;
+        align-items: center;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: none;
+        border-bottom: 1px solid var(--dell-frame);
+        padding: 6px 8px;
         gap: 6px;
       }
 
-      .header-links {
-        gap: 6px;
+      .sidebar-section {
+        flex-shrink: 0;
+        border-bottom: none;
+        padding: 0;
       }
 
-      .header-link {
-        font-size: 11px;
-        padding: 3px 6px;
-      }
-
-      .github-link {
-        width: 28px;
-        height: 28px;
-      }
-
-      .github-link svg {
-        width: 18px;
-        height: 18px;
-      }
-
-      .styles-section {
-        padding: var(--space-xs) 0;
-      }
-
-      .styles-container {
-        padding: 0 var(--space-sm);
-      }
-
-      .style-card {
-        font-size: 11px;
+      .upload-btn {
+        width: auto;
         padding: 4px 8px;
+      }
+
+      .sidebar-styles {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow: visible;
+        padding: 0;
+        gap: 4px;
+        flex: 1;
+      }
+
+      .sidebar-label,
+      .sidebar-group-title {
+        display: none;
+      }
+
+      .sidebar-divider {
+        width: 1px;
+        height: 16px;
+        margin: 0 2px;
+      }
+
+      .style-item {
+        white-space: nowrap;
+        padding: 4px 8px;
+        margin-bottom: 0;
+        font-size: 11px;
       }
 
       .editor-panel {
         border-right: none;
-        border-bottom: 1px solid var(--color-border);
+        border-bottom: 1px solid var(--dell-frame);
         max-height: 30vh;
       }
 
       .markdown-input-container {
-        padding: var(--space-sm);
+        padding: 8px;
       }
 
       .markdown-input {
         font-size: 13px;
-        padding: var(--space-md);
-      }
-
-      .editor-footer {
-        flex-direction: column;
-        gap: var(--space-sm);
-        align-items: stretch;
-        padding: var(--space-sm) var(--space-md);
-      }
-
-      .upload-section {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .upload-label {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .upload-hints {
-        align-items: center;
-        text-align: center;
-      }
-
-      .feishu-hint {
-        font-size: 10px;
+        padding: 8px;
       }
 
       .preview-header {
-        padding: var(--space-xs) var(--space-sm);
+        padding: 6px 10px;
+        flex-wrap: wrap;
+      }
+
+      .preview-container {
+        padding: 16px 12px;
       }
 
       .copy-btn {
-        padding: 6px 10px;
-        font-size: 12px;
+        padding: 5px 10px;
+        font-size: 11px;
       }
 
-      .preview-panel {
-        height: auto;
-      }
-
-      .preview-container {
-        padding: var(--space-lg) var(--space-md);
-      }
-
-      .toast {
-        left: var(--space-md);
-        right: var(--space-md);
-        bottom: var(--space-md);
-      }
-
-      .floating-ad {
-        left: var(--space-md);
-        right: var(--space-md);
-        bottom: var(--space-md);
-      }
-
-      .floating-ad__collapsed {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-      .floating-ad__panel {
-        width: 100%;
-      }
-    }
-
-    /* 平板端优化 */
-    @media (min-width: 769px) and (max-width: 1024px) {
-      #app {
-        max-width: 100%;
-      }
-
-      .header {
-        padding: var(--space-sm) var(--space-lg);
-      }
-
-      .styles-section {
-        padding: var(--space-sm) 0;
-      }
-
-      .preview-container {
-        padding: var(--space-xl) var(--space-lg);
-      }
-    }
-
-    /* ==================== 历史记录功能样式 ==================== */
-
-    /* 历史按钮和保存按钮 */
-    .history-btn,
-    .save-btn {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 10px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      color: var(--text-primary);
-      font-size: 13px;
-    }
-
-    .history-btn:hover,
-    .save-btn:hover {
-      background: var(--bg-primary);
-      border-color: var(--primary-color);
-      color: var(--primary-color);
-    }
-
-    .history-btn svg,
-    .save-btn svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    /* 侧边栏遮罩层 */
-    .history-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 999;
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-    }
-
-    .history-overlay.visible {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    /* 历史记录侧边栏 */
-    .history-sidebar {
-      position: fixed;
-      top: 0;
-      right: -360px;
-      width: 360px;
-      height: 100vh;
-      background: var(--bg-primary);
-      border-left: 1px solid var(--border-color);
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      transition: right 0.3s ease;
-      box-shadow: -4px 0 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .history-sidebar.open {
-      right: 0;
-    }
-
-    /* 侧边栏头部 */
-    .history-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-color);
-      background: var(--bg-secondary);
-    }
-
-    .history-header-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .history-header h3 {
-      margin: 0;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .history-count {
-      padding: 2px 8px;
-      background: var(--primary-color);
-      color: white;
-      border-radius: 10px;
-      font-size: 12px;
-      font-weight: 500;
-    }
-
-    .history-close-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      background: transparent;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      color: var(--text-muted);
-      transition: all 0.2s ease;
-    }
-
-    .history-close-btn:hover {
-      background: var(--bg-primary);
-      color: var(--text-primary);
-    }
-
-    .history-close-btn svg {
-      width: 18px;
-      height: 18px;
-    }
-
-    /* 历史记录列表 */
-    .history-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px;
-    }
-
-    /* 历史记录项 */
-    .history-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 14px;
-      background: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      margin-bottom: 10px;
-      transition: all 0.2s ease;
-    }
-
-    .history-item:hover {
-      border-color: var(--primary-color);
-      box-shadow: 0 2px 8px rgba(0, 102, 255, 0.1);
-    }
-
-    .history-item-content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .history-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--text-primary);
-      margin-bottom: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .history-meta {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .history-time {
-      color: var(--text-muted);
-    }
-
-    .history-style {
-      padding: 1px 6px;
-      background: var(--bg-primary);
-      border-radius: 4px;
-      font-size: 11px;
-    }
-
-    /* 历史记录操作按钮 */
-    .history-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .history-action-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 32px;
-      height: 32px;
-      background: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 6px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .history-action-btn svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .history-action-btn.load {
-      color: var(--primary-color);
-    }
-
-    .history-action-btn.load:hover {
-      background: var(--primary-color);
-      color: white;
-      border-color: var(--primary-color);
-    }
-
-    .history-action-btn.delete {
-      color: #e74c3c;
-    }
-
-    .history-action-btn.delete:hover {
-      background: #e74c3c;
-      color: white;
-      border-color: #e74c3c;
-    }
-
-    /* 空状态 */
-    .history-empty {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 20px;
-      text-align: center;
-      color: var(--text-muted);
-    }
-
-    .history-empty svg {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 16px;
-      opacity: 0.5;
-    }
-
-    .history-empty p {
-      margin: 0 0 8px;
-      font-size: 14px;
-      color: var(--text-primary);
-    }
-
-    .history-empty span {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    /* 移动端响应式 */
-    @media (max-width: 768px) {
       .history-btn-text,
       .save-btn-text {
         display: none;
-      }
-
-      .history-btn,
-      .save-btn {
-        padding: 6px;
       }
 
       .history-sidebar {
@@ -1605,10 +1299,32 @@
         right: -100%;
       }
 
-      .history-sidebar.open {
-        right: 0;
+      .toast {
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        transform: none;
+      }
+
+      .floating-ad,
+      .floating-ad__collapsed {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        width: auto;
       }
     }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      #app {
+        margin: 6px;
+      }
+
+      .preview-container {
+        padding: 20px 16px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1616,13 +1332,7 @@
     <!-- 顶部栏 -->
     <header class="header">
       <div class="logo">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="20" height="20">
-          <rect width="32" height="32" rx="6" fill="#0066FF"/>
-          <path d="M6 10 L6 22 L9 22 L9 15 L13 20 L17 15 L17 22 L20 22 L20 10 L16 10 L13 14 L10 10 Z" fill="white"/>
-          <rect x="6" y="24" width="20" height="2" rx="1" fill="white" opacity="0.7"/>
-        </svg>
         <span>公众号排版器</span>
-        <span class="creator-info">Created by <a href="https://huasheng.ai" target="_blank" rel="noopener noreferrer">花生</a></span>
       </div>
       <div class="header-actions">
         <nav class="header-links">
@@ -1632,61 +1342,54 @@
           <a class="header-link primary" href="https://nf.video/o9jj0s" target="_blank" rel="noopener noreferrer">AI产品购买</a>
           -->
         </nav>
-        <a href="https://github.com/alchaincyf/huasheng_editor"
-           target="_blank"
-           rel="noopener noreferrer"
-           class="github-link"
-           title="查看源码">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-          </svg>
-        </a>
       </div>
     </header>
 
-    <!-- 样式选择区 - 横向滚动 -->
-    <section class="styles-section">
-      <div class="styles-container">
-        <div class="styles-label">选择样式</div>
-        <div class="styles-scroll-wrapper">
-          <div class="styles-list">
-            <!-- 收藏的样式 -->
-            <template v-if="starredStyles.length > 0">
-              <div
-                v-for="styleKey in starredStyles"
-                :key="'star-' + styleKey"
-                class="style-card starred"
-                :class="{ active: currentStyle === styleKey }"
-                @click="currentStyle = styleKey"
-              >
-                {{ getStyleName(styleKey) }}
-              </div>
-              <div style="width: 1px; height: 20px; background: var(--color-light-border); margin: 0 4px;"></div>
-            </template>
+    <!-- 左侧工具栏：上传 + 样式列表 -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <label for="file-upload" class="upload-btn">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          <span>上传 MD</span>
+          <input type="file" id="file-upload" accept=".md,.markdown" @change="handleFileUpload" style="display: none;">
+        </label>
+      </div>
 
-            <!-- 所有样式，添加推荐标识 -->
-            <div
-              v-for="(style, key) in STYLES"
-              :key="key"
-              class="style-card"
-              :class="{
-                active: currentStyle === key,
-                starred: isStyleStarred(key),
-                recommended: isRecommended(key)
-              }"
-              @click="currentStyle = key"
-            >
-              {{ style.name }}
-            </div>
-          </div>
+      <div class="sidebar-section sidebar-styles">
+        <div class="sidebar-label">样式</div>
+
+        <!-- 全部样式（星标排最前） -->
+        <div
+          v-for="[key, style] in sortedStyleEntries"
+          :key="key"
+          class="style-item"
+          :class="{
+            active: currentStyle === key,
+            starred: isStyleStarred(key),
+            recommended: isRecommended(key)
+          }"
+          @click="currentStyle = key"
+        >
+          <span class="style-item-name">{{ style.name }}</span>
         </div>
       </div>
-    </section>
+    </aside>
 
     <!-- 主内容区 -->
     <div class="main-content">
       <!-- 编辑器面板 -->
       <div class="editor-panel">
+        <!-- 编辑器顶部：字符计数（与侧栏上传行、预览 header 行对齐） -->
+        <div class="editor-header">
+          <div class="char-count">
+            {{ markdownInput.length }} 字符
+          </div>
+        </div>
+
         <div class="markdown-input-container">
           <textarea
             ref="editorTextarea"
@@ -1703,7 +1406,7 @@
 ## 功能特点
 
 - **实时预览**：所见即所得
-- **13 种样式**：随意切换
+- **20 种样式**：随意切换
 - **智能粘贴**：支持从飞书、Notion、Word 直接粘贴
 - **图片支持**：直接粘贴或拖拽图片，自动上传
 - **一键复制**：直接粘贴到公众号
@@ -1711,30 +1414,6 @@
 💡 提示：可以直接粘贴截图，或拖拽图片文件到这里"
             spellcheck="false"
           ></textarea>
-        </div>
-
-        <!-- 编辑器底部工具栏 -->
-        <div class="editor-footer">
-          <div class="upload-section">
-            <label for="file-upload" class="upload-label">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                <polyline points="17 8 12 3 7 8"></polyline>
-                <line x1="12" y1="3" x2="12" y2="15"></line>
-              </svg>
-              <span>上传 MD 文件</span>
-              <input type="file" id="file-upload" accept=".md,.markdown" @change="handleFileUpload" style="display: none;">
-            </label>
-            <div class="upload-hints">
-              <span class="upload-hint">支持 .md / .markdown 文件</span>
-              <span class="feishu-hint">
-                💡 支持从飞书、Notion、Word 等直接粘贴，自动转换为 Markdown
-              </span>
-            </div>
-          </div>
-          <div class="char-count">
-            {{ markdownInput.length }} 字符
-          </div>
         </div>
       </div>
 
@@ -2023,7 +1702,7 @@
   </div>
 
   <!-- 加载脚本 -->
-  <script src="styles.js?v=2"></script>
-  <script src="app.js?v=2"></script>
+  <script src="styles.js?v=4"></script>
+  <script src="app.js?v=5"></script>
 </body>
 </html>

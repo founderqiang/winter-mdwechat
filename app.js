@@ -731,6 +731,15 @@ const editorApp = createApp({
       }
 
       return this.floatingAd.ads[this.floatingAd.currentIndex] || this.floatingAd.ads[0];
+    },
+    // 样式列表：星标样式排在最前，其余保持原顺序
+    sortedStyleEntries() {
+      const entries = Object.entries(this.STYLES);
+      return entries.sort(([keyA], [keyB]) => {
+        const aStarred = this.isStyleStarred(keyA) ? 0 : 1;
+        const bStarred = this.isStyleStarred(keyB) ? 0 : 1;
+        return aStarred - bStarred;
+      });
     }
   },
 
