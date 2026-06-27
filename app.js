@@ -1393,8 +1393,17 @@ const markdown = \`![图片](img://\${imageId})\`;
         firstBlock.setAttribute('style', fs + '; margin-top: 0 !important;');
       }
 
+      // 创建容器，但过滤掉背景色和宽度限制，避免"卡片"效果
       const container = doc.createElement('div');
-      container.setAttribute('style', style.container);
+      const filteredContainerStyle = style.container
+        .replace(/background-color:\s*[^;]+;?/gi, '')
+        .replace(/max-width:\s*[^;]+;?/gi, '')
+        .replace(/padding:\s*[^;]+;?/gi, '')
+        .replace(/margin:\s*[^;]+;?/gi, '')
+        .replace(/border:\s*[^;]+;?/gi, '')
+        .replace(/;\s*;/g, ';')
+        .trim();
+      container.setAttribute('style', filteredContainerStyle);
       container.innerHTML = doc.body.innerHTML;
 
       return container.outerHTML;
@@ -1762,51 +1771,6 @@ const markdown = \`![图片](img://\${imageId})\`;
           if (failCount > 0) {
             this.showToast(`图片处理完成：${successCount} 成功，${failCount} 失败（保留原链接）`, 'error');
           }
-        }
-
-        // Section 容器包裹
-        const styleConfig = STYLES[this.currentStyle];
-        const containerBg = this.extractBackgroundColor(styleConfig.styles.container);
-
-        if (containerBg && containerBg !== '#fff' && containerBg !== '#ffffff') {
-          const section = doc.createElement('section');
-          const containerStyle = styleConfig.styles.container;
-          const paddingMatch = containerStyle.match(/padding:\s*([^;]+)/);
-          const maxWidthMatch = containerStyle.match(/max-width:\s*([^;]+)/);
-          const padding = paddingMatch ? paddingMatch[1].trim() : '40px 20px';
-          const maxWidth = maxWidthMatch ? maxWidthMatch[1].trim() : '100%';
-
-          section.setAttribute('style',
-            `background-color: ${containerBg}; ` +
-            `padding: ${padding}; ` +
-            `max-width: ${maxWidth}; ` +
-            `margin: 0 auto; ` +
-            `box-sizing: border-box; ` +
-            `word-wrap: break-word;`
-          );
-
-          while (doc.body.firstChild) {
-            section.appendChild(doc.body.firstChild);
-          }
-
-          const allElements = section.querySelectorAll('*');
-          allElements.forEach(el => {
-            const currentStyle = el.getAttribute('style') || '';
-            let newStyle = currentStyle;
-            newStyle = newStyle.replace(/max-width:\s*[^;]+;?/g, '');
-            newStyle = newStyle.replace(/margin:\s*0\s+auto;?/g, '');
-            if (newStyle.includes(`background-color: ${containerBg}`)) {
-              newStyle = newStyle.replace(new RegExp(`background-color:\\s*${containerBg.replace(/[()]/g, '\\$&')};?`, 'g'), '');
-            }
-            newStyle = newStyle.replace(/;\s*;/g, ';').replace(/^\s*;\s*|\s*;\s*$/g, '').trim();
-            if (newStyle) {
-              el.setAttribute('style', newStyle);
-            } else {
-              el.removeAttribute('style');
-            }
-          });
-
-          doc.body.appendChild(section);
         }
 
         // 代码块简化
