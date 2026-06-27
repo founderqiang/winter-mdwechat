@@ -1,33 +1,71 @@
 # 公众号 Markdown 编辑器
 
-<p align="center">
-  <img src="assets/hero.gif" alt="huasheng_editor Hero Animation" />
-  <br/>
-  <sub>动画由 <a href="https://github.com/alchaincyf/huashu-design">huashu-design</a> skill 制作</sub>
-</p>
-
 <div align="center">
   <img src="logo.svg" width="120" height="120" alt="公众号 Markdown 编辑器">
 
-  一个专为微信公众号设计的 Markdown 编辑器
+  <h3>一个专为微信公众号设计的 Markdown 编辑器</h3>
+  <p><strong>二次开发版本</strong> - 基于 <a href="https://github.com/alchaincyf/huasheng_editor">huasheng_editor</a> 重构</p>
 
-  [![在线体验](https://img.shields.io/badge/在线体验-editor.huasheng.ai-0066FF?style=for-the-badge)](https://editor.huasheng.ai/)
-  [![GitHub](https://img.shields.io/badge/GitHub-源代码-000?style=for-the-badge&logo=github)](https://github.com/alchaincyf/huasheng_editor)
-  [![知识星球](https://img.shields.io/badge/知识星球-AI编程-ff6b6b?style=for-the-badge)](https://wx.zsxq.com/group/48888144124288)
+  [![在线体验](https://img.shields.io/badge/在线体验-markdown.wc.cd-0066FF?style=for-the-badge)](https://markdown.wc.cd/)
+  [![样式数量](https://img.shields.io/badge/样式-31_种-ff6b6b?style=for-the-badge)](#-样式主题)
+  [![许可证](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)](LICENSE)
 </div>
 
 ## 🌟 在线体验
 
-👉 **[https://editor.huasheng.ai/](https://editor.huasheng.ai/)**
+👉 **[https://markdown.wc.cd/](https://markdown.wc.cd/)**
+
+## 📋 项目说明
+
+本项目是 [huasheng_editor](https://github.com/alchaincyf/huasheng_editor) 的二次开发版本，在原有功能基础上进行了重大重构和功能扩展：
+
+### 🔄 主要改进
+
+- **UI 重构**：Dell 1996 复古设计系统，三栏布局
+- **样式扩展**：从 13 种增加到 31 种精心设计的样式主题
+- **长文优化**：所有样式针对长文阅读进行优化
+- **布局改进**：侧栏样式选择器，顶部对齐的三列布局
 
 ## ✨ 功能特点
 
-### 🎨 13 种精美样式
-- **经典公众号系列**：默认、技术、优雅、深度阅读
-- **传统媒体系列**：杂志风格、纽约时报、金融时报、Jony Ive
-- **现代数字系列**：Wired 连线、Medium 长文、Apple 极简、Anthropic Claude、AI Coder 特调
+### 🎨 31 种精美样式
 
-### 📸 智能图片处理（⭐ 最新升级）
+**经典媒体系列**：
+- 金融时报、纽约时报、Le Monde 世界报、Nikkei 日経、Guardian 卫报
+
+**科技品牌系列**：
+- Anthropic Claude、Cursor、Expo、Figma、Framer、HashiCorp、IBM、Intercom、ElevenLabs、Cohere
+
+**设计工具系列**：
+- Airbnb、Airtable、Clay、Discord、Cal.com
+
+**汽车品牌系列**：
+- BMW、BMW M、Bugatti、Ferrari
+
+**复古/编辑系列**：
+- Dell 1996、原研哉·空、Hische·编辑部、安藤·清水、高迪·有机
+
+**其他精选**：
+- Binance、ClickHouse、Jony Ive、Apple 极简、Medium 长文、深度阅读、优雅简约、技术风格、默认公众号风格、档案馆、焦橙文档
+
+### 🖥️ Dell 1996 设计系统
+
+采用 Dell 1996 复古设计语言：
+- **黑色页框**：8px 黑色边框围绕整个视口
+- **色块系统**：flat color blocks，无渐变无阴影
+- **字体栈**：Arial Black / Helvetica / Times New Roman
+- **0px 圆角**：所有元素直角设计
+- **硬边投影**：4px 4px 0 黑色硬阴影
+
+### 📐 三栏布局
+
+- **左侧边栏**：样式选择器（垂直滚动）+ 上传按钮
+- **中间编辑器**：Markdown 编辑区 + 字符统计
+- **右侧预览**：实时预览 + 操作按钮
+- **顶部对齐**：三列顶部高度一致（56px）
+
+### 📸 智能图片处理
+
 - **智能粘贴**：支持从任何地方粘贴图片（截图、浏览器、文件管理器）
 - **自动压缩**：图片自动压缩到合理大小（最高压缩 80%+）
 - **本地存储**：使用 IndexedDB 持久化存储，刷新不丢失
@@ -35,7 +73,17 @@
 - **多图网格**：2-3 列自动排版，类似朋友圈
 - **完美兼容**：复制到公众号时自动转 Base64
 
+### 📝 长文优化
+
+所有样式针对长文阅读优化：
+- **Georgia 衬线字体**：经典编辑感
+- **暖奶油色背景**：#faf8f3，减少视觉疲劳
+- **行高 1.7**：适合长时间阅读
+- **结构装饰**：边框替代渐变/阴影
+- **克制色彩**：5-7 种颜色，单一强调色
+
 ### 🚀 强大功能
+
 - **实时预览**：左侧编辑，右侧即时查看效果
 - **一键复制**：直接粘贴到公众号编辑器，格式完美保留
 - **智能粘贴**：支持从飞书、Notion、Word 等富文本应用直接粘贴
@@ -43,24 +91,27 @@
 - **样式收藏**：收藏常用样式，快速切换
 - **文件上传**：支持 .md / .markdown 文件
 - **代码高亮**：优雅的代码块展示，支持多种语言
+- **滚动同步**：编辑器和预览区滚动位置同步
 - **响应式设计**：完美适配桌面、平板、手机
 
 ## 📖 使用指南
 
 ### 快速开始
-1. 访问 [在线编辑器](https://editor.huasheng.ai/)
-2. 在左侧输入或粘贴 Markdown 内容
-3. 选择喜欢的样式主题
-4. 点击「复制到公众号」
+
+1. 访问 [在线编辑器](https://markdown.wc.cd/)
+2. 在中间输入或粘贴 Markdown 内容
+3. 在左侧选择喜欢的样式主题
+4. 点击右侧「复制到公众号」
 5. 粘贴到微信公众号编辑器
 
 ### 本地运行
+
 ```bash
 # 克隆仓库
-git clone https://github.com/alchaincyf/huasheng_editor.git
+git clone https://github.com/seventhocean/winter-mdwechat.git
 
 # 进入目录
-cd huasheng_editor
+cd winter-mdwechat
 
 # 启动本地服务器（Python）
 python3 -m http.server 8080
@@ -79,15 +130,18 @@ python3 -m http.server 8080
 - **IndexedDB** - 本地图片持久化存储
 - **Canvas API** - 客户端图片压缩
 - **Turndown** - HTML 转 Markdown（智能粘贴）
+- **html2canvas** - 小红书图片导出
 - **纯 CSS** - 无需构建工具，开箱即用
 
 ## 📂 项目结构
 
 ```
-公众号编辑器/
-├── index.html        # 主页面
+winter-mdwechat/
+├── index.html        # 主页面（Dell 1996 设计系统）
 ├── app.js           # Vue 应用逻辑
-├── styles.js        # 13 种样式主题配置
+├── styles.js        # 31 种样式主题配置
+├── DESIGN.md        # Dell 1996 设计规范
+├── *.md             # 42 个品牌设计文档
 ├── icon.svg         # 项目图标
 ├── favicon.svg      # 网站图标
 ├── logo.svg         # Logo 图标
@@ -99,7 +153,7 @@ python3 -m http.server 8080
 
 ## 💡 核心特性
 
-### ⭐ 图片处理系统（最新升级）
+### ⭐ 图片处理系统
 
 **技术架构**：
 ```
@@ -130,23 +184,32 @@ IndexedDB 持久化存储
 - 5 张及以上：3 列网格布局
 
 ### 公众号完美兼容
+
 - ✅ 自动将 CSS Grid 转换为 Table 布局
 - ✅ 所有样式转为内联样式
 - ✅ 图片自动转 Base64
 - ✅ 强制样式优先级（!important）
 
 ### 推荐样式
-带有 ✨ 标识的样式是特别推荐的：
-- **Anthropic Claude** - 优雅的技术文档风格
+
+**编辑风格**（适合长文）：
+- **Anthropic Claude** - 温暖人文的 AI 风格
 - **金融时报** - 专业的财经风格
 - **纽约时报** - 经典的新闻风格
-- **技术风格** - 程序员最爱
+- **Dell 1996** - 复古企业风格
+
+**品牌风格**：
+- **Figma** - 设计工具的 playful 感
+- **Ferrari** - 奢华赛车红
+- **IBM** - 企业级权威感
+- **原研哉·空** - 日式极简美学
 
 ## 🤝 贡献指南
 
 欢迎提交 Issue 和 Pull Request！
 
 ### 如何贡献
+
 1. Fork 本仓库
 2. 创建你的特性分支 (`git checkout -b feature/AmazingFeature`)
 3. 提交你的更改 (`git commit -m 'Add some AmazingFeature'`)
@@ -154,29 +217,18 @@ IndexedDB 持久化存储
 5. 开启一个 Pull Request
 
 ### 添加新样式
+
 1. 在 `styles.js` 中添加新的样式配置
-2. 确保包含所有必需的元素样式
+2. 确保包含所有必需的元素样式（23 个 key）
 3. 测试各种 Markdown 元素的渲染效果
 4. 提交 PR 并附上效果截图
 
-## 👨‍💻 作者
+## 🙏 致谢
 
-**花生** (alchaincyf)
-- 📧 邮箱：[alchaincyf@gmail.com](mailto:alchaincyf@gmail.com)
-- 🌟 知识星球：[AI编程：从入门到精通](https://wx.zsxq.com/group/48888144124288)
-- 💻 GitHub：[@alchaincyf](https://github.com/alchaincyf)
-
-## 🎓 知识星球
-
-本项目是我为知识星球「**AI编程：从入门到精通**」的用户开源的工具。
-
-在星球里，你可以：
-- 🚀 学习 AI 编程最佳实践
-- 💡 获取更多开源项目
-- 🤝 与同好交流技术
-- 📚 获得系统化的学习路径
-
-👉 [加入知识星球](https://wx.zsxq.com/group/48888144124288)
+- **原作者**：[花生](https://github.com/alchaincyf) - [huasheng_editor](https://github.com/alchaincyf/huasheng_editor)
+- **设计文档**：使用 [getdesign](https://www.npmjs.com/package/getdesign) 工具收集品牌设计规范
+- **二次开发**：[seventhocean](https://github.com/seventhocean)
+- 感谢所有贡献者和使用者
 
 ## 📄 开源协议
 
@@ -188,20 +240,25 @@ IndexedDB 持久化存储
 - ✅ 分发
 - ✅ 私有使用
 
-## 🙏 致谢
+## 📊 更新日志
 
-- 感谢所有贡献者和使用者
-- 感谢知识星球的朋友们的支持
-- 特别感谢 Claude 在项目开发中的协助
+### v2.0 (2026-03-25)
+- 🎨 UI 重构为 Dell 1996 设计系统
+- 📐 三栏布局重构
+- 🎯 新增 20 个品牌样式
+- ✨ 优化 16 个样式为长文编辑风格
+- 📝 总计 31 个样式
 
-## 📊 Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=alchaincyf/huasheng_editor&type=Date)](https://star-history.com/#alchaincyf/huasheng_editor&Date)
+### v1.0 (原始版本)
+- 基础 Markdown 编辑功能
+- 13 种预设样式
+- 图片处理和压缩
+- 智能粘贴功能
 
 ---
 
 <div align="center">
-  Made with ❤️ by <a href="https://github.com/alchaincyf">花生</a>
-  <br>
-  如果觉得有用，请给个 ⭐️ Star 支持一下！
+  <p><strong>二次开发版本</strong> - 基于 <a href="https://github.com/alchaincyf/huasheng_editor">huasheng_editor</a></p>
+  <p>Made with ❤️ by <a href="https://github.com/seventhocean">seventhocean</a></p>
+  <p>如果觉得有用，请给个 ⭐️ Star 支持一下！</p>
 </div>
