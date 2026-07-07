@@ -1413,187 +1413,69 @@ const markdown = \`![图片](img://\${imageId})\`;
       const body = doc.body;
       const children = Array.from(body.children);
 
-      let imagesToProcess = [];
-
-      // 找出所有图片元素，处理两种情况：
-      // 1. 多个图片在同一个<p>标签内（连续图片）
-      // 2. 每个图片在单独的<p>标签内（分隔的图片）
+      // 找出所有图片元素，为每个图片创建独立的容器
       children.forEach((child, index) => {
         if (child.tagName === 'P') {
           const images = child.querySelectorAll('img');
           if (images.length > 0) {
-            // 如果一个P标签内有多个图片，它们肯定是连续的
-            if (images.length > 1) {
-              // 多个图片在同一个P标签内，作为一组
-              const group = Array.from(images).map(img => ({
-                element: child,
-                img: img,
-                index: index,
-                inSameParagraph: true,
-                paragraphImageCount: images.length
-              }));
-              imagesToProcess.push(...group);
-            } else if (images.length === 1) {
-              // 单个图片在P标签内
-              imagesToProcess.push({
-                element: child,
-                img: images[0],
-                index: index,
-                inSameParagraph: false,
-                paragraphImageCount: 1
-              });
+            // 为每个图片创建独立的容器
+            images.forEach((img, imgIndex) => {
+              // 创建图片包装器
+              const imgWrapper = doc.createElement('div');
+              imgWrapper.setAttribute('style', `
+                margin: 20px 0;
+                text-align: center;
+              `.trim());
+
+              // 克隆图片
+              const newImg = img.cloneNode(true);
+              // 设置图片样式为独立显示
+              newImg.setAttribute('style', `
+                max-width: 100%;
+                height: auto;
+                display: block;
+                margin: 0 auto;
+              `.trim());
+
+              imgWrapper.appendChild(newImg);
+
+              // 如果是第一个图片，替换原来的P标签
+              if (imgIndex === 0) {
+                child.parentNode.insertBefore(imgWrapper, child);
+              } else {
+                // 后续图片插入到前一个包装器之后
+                const lastWrapper = imgWrapper.previousSibling;
+                if (lastWrapper && lastWrapper.parentNode) {
+                  lastWrapper.parentNode.insertBefore(imgWrapper, lastWrapper.nextSibling);
+                }
+              }
+            });
+
+            // 删除原来的P标签
+            if (child.parentNode) {
+              child.parentNode.removeChild(child);
             }
           }
         } else if (child.tagName === 'IMG') {
           // 直接是图片元素（少见情况）
-          imagesToProcess.push({
-            element: child,
-            img: child,
-            index: index,
-            inSameParagraph: false,
-            paragraphImageCount: 1
-          });
-        }
-      });
-
-      // 分组逻辑
-      let groups = [];
-      let currentGroup = [];
-
-      imagesToProcess.forEach((item, i) => {
-        if (i === 0) {
-          currentGroup.push(item);
-        } else {
-          const prevItem = imagesToProcess[i - 1];
-
-          // 判断是否连续的条件：
-          // 1. 在同一个P标签内的图片肯定是连续的
-          // 2. 不同P标签的图片，要看索引是否相邻（差值为1表示相邻）
-          let isContinuous = false;
-
-          if (item.index === prevItem.index) {
-            // 同一个P标签内的图片
-            isContinuous = true;
-          } else if (item.index - prevItem.index === 1) {
-            // 相邻的P标签，表示连续（没有空行）
-            isContinuous = true;
-          }
-          // 如果索引差大于1，说明中间有其他元素或空行，不连续
-
-          if (isContinuous) {
-            currentGroup.push(item);
-          } else {
-            if (currentGroup.length > 0) {
-              groups.push([...currentGroup]);
-            }
-            currentGroup = [item];
-          }
-        }
-      });
-
-      if (currentGroup.length > 0) {
-        groups.push(currentGroup);
-      }
-
-      // 对每组图片进行处理
-      groups.forEach(group => {
-        // 只有2张及以上的图片才需要特殊布局
-        if (group.length < 2) return;
-
-        const imageCount = group.length;
-        const firstElement = group[0].element;
-
-        // 创建容器
-        const gridContainer = doc.createElement('div');
-        gridContainer.setAttribute('class', 'image-grid');
-        gridContainer.setAttribute('data-image-count', imageCount);
-
-        // 根据图片数量设置网格样式
-        let gridStyle = '';
-        let columns = 2; // 默认2列
-
-        if (imageCount === 2) {
-          gridStyle = `
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin: 20px auto;
-            max-width: 100%;
-            align-items: start;
-          `;
-          columns = 2;
-        } else if (imageCount === 3) {
-          gridStyle = `
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 20px auto;
-            max-width: 100%;
-            align-items: start;
-          `;
-          columns = 3;
-        } else if (imageCount === 4) {
-          gridStyle = `
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin: 20px auto;
-            max-width: 100%;
-            align-items: start;
-          `;
-          columns = 2;
-        } else {
-          // 5张及以上，使用3列
-          gridStyle = `
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
-            margin: 20px auto;
-            max-width: 100%;
-            align-items: start;
-          `;
-          columns = 3;
-        }
-
-        gridContainer.setAttribute('style', gridStyle);
-        gridContainer.setAttribute('data-columns', columns);
-
-        // 将图片添加到容器中
-        group.forEach((item) => {
           const imgWrapper = doc.createElement('div');
-
           imgWrapper.setAttribute('style', `
-            width: 100%;
-            height: auto;
-            overflow: hidden;
-          `);
-
-          const img = item.img.cloneNode(true);
-          // 修改图片样式以适应容器，添加圆角
-          img.setAttribute('style', `
-            width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 8px;
+            margin: 20px 0;
+            text-align: center;
           `.trim());
 
-          imgWrapper.appendChild(img);
-          gridContainer.appendChild(imgWrapper);
-        });
+          const newImg = child.cloneNode(true);
+          newImg.setAttribute('style', `
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+          `.trim());
 
-        // 替换原来的图片元素
-        firstElement.parentNode.insertBefore(gridContainer, firstElement);
-
-        // 删除原来的图片元素（需要去重，避免重复删除同一个元素）
-        const elementsToRemove = new Set();
-        group.forEach(item => {
-          elementsToRemove.add(item.element);
-        });
-        elementsToRemove.forEach(element => {
-          if (element.parentNode) {
-            element.parentNode.removeChild(element);
-          }
-        });
+          imgWrapper.appendChild(newImg);
+          child.parentNode.insertBefore(imgWrapper, child);
+          child.parentNode.removeChild(child);
+        }
       });
     },
 
@@ -2295,7 +2177,7 @@ const markdown = \`![图片](img://\${imageId})\`;
 
     isRecommended(styleKey) {
       // 推荐的样式
-      const recommended = ['nikkei', 'wechat-anthropic', 'wechat-ft', 'wechat-nyt', 'latepost-depth', 'wechat-tech'];
+      const recommended = ['nikkei', 'wechat-anthropic', 'wechat-ft', 'wechat-nyt', 'latepost-depth', 'wechat-tech', 'moyu-green', 'red-white', 'graphite-minimal', 'zen-whitespace', 'moyu-ticket', 'olive-journal', 'hische-editorial', 'dell-1996'];
       return recommended.includes(styleKey);
     },
 
